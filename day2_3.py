@@ -5,7 +5,6 @@ from tensorflow.examples.tutorials.mnist import input_data
 # number 1 to 10 data
 mnist = input_data.read_data_sets('MNIST_data', one_hot=True)
 
-
 def compute_accuracy(v_xs, v_ys):
     global prediction
     y_pre = sess.run(prediction, feed_dict={xs: v_xs, keep_prob: 1})
@@ -13,7 +12,6 @@ def compute_accuracy(v_xs, v_ys):
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
     result = sess.run(accuracy, feed_dict={xs: v_xs, ys: v_ys, keep_prob: 1})
     return result
-
 
 def weight_variable(shape):
     initial = tf.truncated_normal(shape,stddev=0.1)
@@ -78,7 +76,7 @@ sess = tf.Session()
 # important step
 sess.run(tf.global_variables_initializer())
 
-for i in range(1000):
+for i in range(10000):
     batch_xs, batch_ys = mnist.train.next_batch(100)
     sess.run(train_step, feed_dict={xs: batch_xs, ys: batch_ys, keep_prob: 0.5})
     if i % 50 == 0:
