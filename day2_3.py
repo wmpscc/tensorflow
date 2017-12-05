@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 #_*_coding:utf-8_*_
+import os
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
 # number 1 to 10 data
 mnist = input_data.read_data_sets('MNIST_data', one_hot=True)
-
+os.environ['CUDA_VISIBLE_DEVICES'] = '0' # 使用 GPU 0
 def compute_accuracy(v_xs, v_ys):
     global prediction
     y_pre = sess.run(prediction, feed_dict={xs: v_xs, keep_prob: 1})
@@ -67,16 +68,16 @@ b_fc2 = bias_variable([10])
 prediction = tf.nn.softmax(tf.matmul(h_fc1_drop,W_fc2) + b_fc2)
 
 # the error between prediction and real data
-
+tf.train.exponential_decay()
 cross_entropy = tf.reduce_mean(-tf.reduce_sum(ys * tf.log(prediction),
                                               reduction_indices=[1]))       # loss
 train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
-
-sess = tf.Session()
+config = tf.ConfigProto(allow_soft_placement=True, log_device_placement=True)
+sess = tf.Session(config=config)
 # important step
 sess.run(tf.global_variables_initializer())
 
-for i in range(10000):
+for i in range(1000):
     batch_xs, batch_ys = mnist.train.next_batch(100)
     sess.run(train_step, feed_dict={xs: batch_xs, ys: batch_ys, keep_prob: 0.5})
     if i % 50 == 0:
